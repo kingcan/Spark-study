@@ -1,30 +1,45 @@
 package cn.edu.hbut.kingcan.testFunction;
 
-import scala.annotation.meta.param;
-
+import cn.edu.hbut.kingcan.config.frame.Function;
+import scala.Serializable;
 import java.util.List;
 
-public class FunctionImplFCM {
-    int clusternum = 3;//
-    int exponent = 3;//模糊指数m
-    List<double[]> datas;//数据集
-    List<Integer> datas_label;
-    int num_data = datas.size();        // 数据行数
-    int num_d = datas.get(0).length;    // 数据维数
+public class FunctionImplFCM implements Function, Serializable {
+
+    private static final long serialVersionUID = 3673941067129025715L;
+    private  int exponent = 3;//模糊指数m
+    private  List<double[]> datas;//数据集(外界传入)
+    private int clusternum;//聚类数目(外界传入)
+    private  List<Integer> datas_label;
+    int num_data ;        // 数据行数
+    int num_d ;    // 数据维数
+    double[][] U = new double[clusternum][num_data];
     double[][] c = new double[clusternum][num_d];//聚类中心（集）
+      public FunctionImplFCM(){
+      }
+      public FunctionImplFCM(List<double[]> datas,int clusternum){
+          this.datas=datas;
+          this.clusternum=clusternum;
+          this.num_data= datas.size();
+          this.num_d= datas.get(0).length;
+      }
+
     public  double function(double position []){
         /*
-            @param datas         原始数据
+     @param datas         原始数据
      @param datas_label   数据标签
       @param clusternum    类别数量
       @param iternum       迭代次数
       @param exponent      指数
         */
+
         if(datas == null || datas.size() < 1 || exponent <= 1) {
             return 0;
         }
+          for (int i=0;i<clusternum;i++)
+              for (int j=0;j<num_d;j++)
+                  c[i][j]=position[i*num_d+j];
 
-        double[][] U = new double[clusternum][num_data];
 
         /** 更新U */
         for (int j = 0; j < clusternum; j++) {
@@ -75,4 +90,67 @@ public class FunctionImplFCM {
         return Math.sqrt(sum);
     }
 
+    public int getClusternum() {
+        return clusternum;
+    }
+
+    public void setClusternum(int clusternum) {
+        this.clusternum = clusternum;
+    }
+
+    public int getExponent() {
+        return exponent;
+    }
+
+    public void setExponent(int exponent) {
+        this.exponent = exponent;
+    }
+
+    public List<double[]> getDatas() {
+        return datas;
+    }
+
+    public void setDatas(List<double[]> datas) {
+        this.datas = datas;
+    }
+
+    public List<Integer> getDatas_label() {
+        return datas_label;
+    }
+
+    public void setDatas_label(List<Integer> datas_label) {
+        this.datas_label = datas_label;
+    }
+
+    public int getNum_data() {
+        return num_data;
+    }
+
+    public void setNum_data(int num_data) {
+        this.num_data = num_data;
+    }
+
+    public int getNum_d() {
+        return num_d;
+    }
+
+    public void setNum_d(int num_d) {
+        this.num_d = num_d;
+    }
+
+    public double[][] getU() {
+        return U;
+    }
+
+    public void setU(double[][] u) {
+        U = u;
+    }
+
+    public double[][] getC() {
+        return c;
+    }
+
+    public void setC(double[][] c) {
+        this.c = c;
+    }
 }
