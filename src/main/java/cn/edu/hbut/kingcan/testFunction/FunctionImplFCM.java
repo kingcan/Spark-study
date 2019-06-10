@@ -2,6 +2,8 @@ package cn.edu.hbut.kingcan.testFunction;
 
 import cn.edu.hbut.kingcan.config.frame.Function;
 import scala.Serializable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionImplFCM implements Function, Serializable {
@@ -13,8 +15,8 @@ public class FunctionImplFCM implements Function, Serializable {
     private  List<Integer> datas_label;
     int num_data ;        // 数据行数
     int num_d ;    // 数据维数
-    double[][] U = new double[clusternum][num_data];
-    double[][] c = new double[clusternum][num_d];//聚类中心（集）
+    double[][] U; //= new double[clusternum][num_data];
+    double[][] c; //= new double[clusternum][num_d];//聚类中心（集）
       public FunctionImplFCM(){
       }
       public FunctionImplFCM(List<double[]> datas,int clusternum){
@@ -22,6 +24,9 @@ public class FunctionImplFCM implements Function, Serializable {
           this.clusternum=clusternum;
           this.num_data= datas.size();
           this.num_d= datas.get(0).length;
+          this.c= new double[clusternum][num_d];//聚类中心（集）
+          this.U = new double[clusternum][num_data];
+          this.datas_label=new ArrayList<>();
       }
 
     public  double function(double position []){
@@ -36,10 +41,10 @@ public class FunctionImplFCM implements Function, Serializable {
         if(datas == null || datas.size() < 1 || exponent <= 1) {
             return 0;
         }
-          for (int i=0;i<clusternum;i++)
-              for (int j=0;j<num_d;j++)
-                  c[i][j]=position[i*num_d+j];
-
+          for (int i=0;i<clusternum;i++) {
+              for (int j = 0; j < num_d; j++)
+                  c[i][j] = position[i * num_d + j];
+          }
 
         /** 更新U */
         for (int j = 0; j < clusternum; j++) {
@@ -77,7 +82,7 @@ public class FunctionImplFCM implements Function, Serializable {
                     max = U[index][j];
                 }
             }
-            datas_label.set(j, index+1);
+            datas_label.add(j,index+1);
         }
 
         return sum;
